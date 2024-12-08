@@ -7,6 +7,9 @@ redirect_from:
   - /about.html
 ---
 
-👋 Hello, I'm Kauê, a Brazilian software engineer with a strong passion for Java and cutting-edge server technologies. I currently work on large-scale, mission-critical systems at the country's leading television network. My expertise lies in developing innovative tools and automated solutions to enhance business processes and foster integrations with other systems. My eagerness to take on global challenges makes me an enthusiastic collaborator who seeks to push the boundaries of technology on an international scale. 
+Kauê Marques is a software developer with a deep fascination for software engineering and solution architecture. He specializes in crafting innovative and efficient solutions to complex challenges, with expertise in payment systems like PIX, billing, and credit cards, as well as cloud migration strategies.
 
-📜 My passion for technology drives me to embrace new opportunities worldwide and contribute my expertise to diverse projects. I believe in the power of collaboration with exceptional teams to create impactful solutions for a global audience. My dedication to exploring and leveraging technology to achieve goals is evident in my approach to every project, making me a valuable asset to any international endeavor.
+Passionate about building scalable and reliable systems, Kauê works with technologies such as Java, Spring, Apache Kafka, AWS, Kubernetes, and Red Hat OpenShift. He embraces best practices like SOLID principles and Hexagonal Architecture, ensuring clean, maintainable, and future-proof code.
+
+As a technical mentor, Kauê combines his enthusiasm for software engineering with hands-on collaboration, guiding teams to achieve innovation and operational excellence. On this blog, he shares insights, tips, and lessons learned, aiming to inspire and support other professionals in the ever-evolving tech industry.
+
