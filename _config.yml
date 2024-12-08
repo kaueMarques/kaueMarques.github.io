@@ -12,7 +12,7 @@ title                    : "kaue Marques"
 title_separator          : "-"
 name                     : &name "kaue Marques"
 description              : &description "Share is a God Gift"
-url                      : https://academicpages.github.io # the base hostname & protocol for your site e.g. "https://[your GitHub username].github.io"
+url                      : https://kauemarques.github.io # the base hostname & protocol for your site e.g. "https://[your GitHub username].github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "academicpages/academicpages.github.io"
 
@@ -21,20 +21,20 @@ repository               : "academicpages/academicpages.github.io"
 #               Additional customization can be done by editing /_includes/author-profile.html
 author:
   # Biographic information
-  avatar           : "profile.png"
+  avatar           : "https://media.licdn.com/dms/image/v2/D4D03AQHhih77lQN82A/profile-displayphoto-shrink_400_400/B4DZOjzEtBHUAg-/0/1733619895999?e=1739404800&v=beta&t=8iRLWbmJQW7MO8XRjikVBIpTvfZ7SWL0hHScen2mtxk"
   name             : "kaue Marques Barbosa"
   pronouns         : # example: "she/her"  
-  bio              : "Short biography for the left-hand sidebar"
+  bio              : ""
   location         : "Earth"
-  employer         : "Red Brick University"
+  employer         : "software Engineer"
   uri              : # URL
-  email            : "none@example.org" 
+  email            : "" 
 
   # Academic websites
   arxiv            : # URL - Update with the correct link to your profile
-  googlescholar    : "https://scholar.google.com/citations?user=PS_CX0AAAAAJ"
+  googlescholar    : ""
   impactstory      : # URL
-  orcid            : "http://orcid.org/yourorcidurl"
+  orcid            : ""
   semantic         : # URL
   pubmed           : ""
   researchgate     : # URL
@@ -44,7 +44,7 @@ author:
   bitbucket        : # Username - Update with your username on the site
   codepen          : # Username
   dribbble         : # Username
-  github           : "academicpages"
+  github           : "kaueMarques"
   kaggle           : # Username  
   stackoverflow    : # User number or user number and name (i.e., use "1" or "1/jeff-atwood")    
 
