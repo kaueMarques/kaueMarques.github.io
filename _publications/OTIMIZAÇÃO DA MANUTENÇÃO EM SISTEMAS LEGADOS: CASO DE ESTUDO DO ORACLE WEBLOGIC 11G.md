@@ -3,7 +3,8 @@ title: "OTIMIZAÇÃO DA MANUTENÇÃO EM SISTEMAS LEGADOS: CASO DE ESTUDO DO ORAC
 collection: publications
 category: manuscripts
 permalink: /publication/weblogic-kmb-1
-excerpt: 'This paper is about the number 1. The number 2 is left for future work.'
+excerpt: 'CONICT - Congresso de Inovação, Ciência e Tecnologia
+14º CONGRESSO DE INOVAÇÃO, CIÊNCIA E TECNOLOGIA DO IFSP'
 date: 2023-11-06
 venue: 'Conferências do IFSP, 14º CONGRESSO DE INOVAÇÃO, CIÊNCIA E TECNOLOGIA DO IFSP'
 slidesurl: 'https://ocs.ifsp.edu.br/conict/xivconict/paper/view/9464/3589'
