@@ -1,6 +1,6 @@
 ---
 permalink: /
-title: "Space of Kaue Thoughts"
+title: "Think space of Kauê"
 author_profile: true
 redirect_from: 
   - /about/
