@@ -2,7 +2,7 @@ name: gera post
 
 on:
   issues:
-    types: [closed] 
+    types: [closed]
 
 jobs:
   create-page:
