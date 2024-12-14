@@ -2,7 +2,7 @@ name: gera post
 
 on:
   issues:
-    types: [closed] 
+    types: [closed] # A action será disparada apenas quando uma issue for fechada
 
 jobs:
   create-page:
