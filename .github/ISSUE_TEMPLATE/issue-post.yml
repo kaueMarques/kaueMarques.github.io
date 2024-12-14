@@ -1,0 +1,44 @@
+name: gera post
+
+on:
+  issues:
+    types: [closed] 
+
+jobs:
+  create-page:
+    if: github.event.issue.closed_reason == 'done' && github.event.sender.login == github.repository_owner  
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Extract issue content
+        id: extract_issue
+        run: |
+          mkdir -p pages
+          # Cria o nome do arquivo conforme o formato YYYY-MM-DD-TITULO.md
+          set date = $(date -u +"%Y-%m-%d")
+          set title = ${GITHUB_EVENT_NAME// /-}
+          echo "title: '${{ github.event.issue.title }}'" > "_pages/${date}-${{ title }}.md"
+          echo "date: ${date}" >> "pages/${date}-${{ title }}.md"
+          echo "permalink: /posts/${date:0:4}/${date:5:2}/${title}/" >> "_pages/${date}-${{ title }}.md"
+          echo "tags:" >> "_pages/${date}-${{ title }}.md"
+          echo "  - nao-definido" >> "_pages/${date}-${{ title }}.md"
+          echo "" >> "_pages/${date}-${{ title }}.md"
+          echo "---" >> "_pages/${date}-${{ title }}.md"
+          echo "" >> "_pages/${date}-${{ title }}.md"
+          echo "${{ github.event.issue.body }}" >> "pages/${date}-${{ title }}.md"
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and Push
+        run: |
+          git add pages/
+          git commit -m "feat- post feito por action #${{ github.event.issue.number }}"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
