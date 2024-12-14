@@ -16,19 +16,23 @@ jobs:
       - name: Extract issue content
         id: extract_issue
         run: |
-          mkdir -p pages
+          mkdir -p _pages
           # Cria o nome do arquivo conforme o formato YYYY-MM-DD-TITULO.md
           set date = $(date -u +"%Y-%m-%d")
           set title = ${GITHUB_EVENT_NAME// /-}
           echo "title: '${{ github.event.issue.title }}'" > "_pages/${date}-${{ title }}.md"
-          echo "date: ${date}" >> "pages/${date}-${{ title }}.md"
+          echo "date: ${date}" >> "_pages/${date}-${{ title }}.md"
           echo "permalink: /posts/${date:0:4}/${date:5:2}/${title}/" >> "_pages/${date}-${{ title }}.md"
           echo "tags:" >> "_pages/${date}-${{ title }}.md"
           echo "  - nao-definido" >> "_pages/${date}-${{ title }}.md"
           echo "" >> "_pages/${date}-${{ title }}.md"
           echo "---" >> "_pages/${date}-${{ title }}.md"
           echo "" >> "_pages/${date}-${{ title }}.md"
-          echo "${{ github.event.issue.body }}" >> "pages/${date}-${{ title }}.md"
+          echo "${{ github.event.issue.body }}" >> "_pages/${date}-${{ title }}.md"
+          # Substitui os links do YouTube por um iframe
+          sed -i.bak 's/YT[^ ]*/{{< youtube \1 >}}/g' "_pages/${date}-${{ title }}.md"
+          echo "[clique aqui se o vídeo não abrir](https://www.youtube.com/watch?v=\1)" >> "_pages/${date}-${{ title }}.md"
+          rm "_pages/${date}-${{ title }}.md.bak"
 
       - name: Configure Git
         run: |
@@ -37,8 +41,8 @@ jobs:
 
       - name: Commit and Push
         run: |
-          git add pages/
-          git commit -m "feat- post feito por action #${{ github.event.issue.number }}"
+          git add _pages/
+          git commit -m "feat: post feito por action #${{ github.event.issue.number }}"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.PAGE_TOKEN }}
