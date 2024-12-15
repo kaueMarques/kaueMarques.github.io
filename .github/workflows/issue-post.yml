@@ -2,13 +2,11 @@ name: gera post
 
 on:
   issues:
-    types: [closed, done, fixed, resolved, completed]
+    types: [completed]
 
 jobs:
   create-page:
-    if: |
-      ${{ contains(['done', 'closed', 'fixed', 'resolved', 'completed'], github.event.issue.closed_reason) && 
-        github.event.sender.login == github.repository_owner }}
+    if: ${{ github.event.issue.closed_reason == 'completed' && github.event.sender.login == github.repository_owner }}
     runs-on: ubuntu-latest
 
     steps:
@@ -18,8 +16,6 @@ jobs:
       - name: Extract issue content
         id: extract_issue
         run: |
-          mkdir -p _pages
-          # Obtendo a data atual no formato YYYY-MM-DD
           date=$(date -u +"%Y-%m-%d")
           title=${GITHUB_EVENT_NAME// /-} # Corrigir para obter o título como string
           filename="_pages/${date}-${title}.md"
@@ -33,6 +29,7 @@ jobs:
           echo "${{ github.event.issue.body }}" >> "$filename"
           sed -i.bak 's/YT[^ ]*/{{< youtube \1 >}}/g' "$filename"
           echo "[clique aqui se o vídeo não abrir](https://www.youtube.com/watch?v=\1)" >> "$filename"
+          rm "$filename.bak"
 
       - name: Configure Git
         run: |
