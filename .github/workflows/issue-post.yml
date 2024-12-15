@@ -2,7 +2,7 @@ name: gera post
 
 on:
   issues:
-    types: [closed]
+    types: [closed, done, fixed, resolved, completed]
 
 jobs:
   create-page:
@@ -16,8 +16,9 @@ jobs:
       - name: Extract issue content
         id: extract_issue
         run: |
+          mkdir -p _pages
           date=$(date -u +"%Y-%m-%d")
-          title=${GITHUB_EVENT_NAME// /-} # Corrigir para obter o título como string
+          title=${GITHUB_EVENT_NAME// /-}
           filename="_pages/${date}-${title}.md"
           echo "title: '${{ github.event.issue.title }}'" > "$filename"
           echo "date: ${date}" >> "$filename"
@@ -39,4 +40,4 @@ jobs:
           git commit -m "feat: post feito por action #${{ github.event.issue.number }}"
           git push
         env:
-          GITHUB_TOKEN: ${{ secrets.PAGE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.NEW_PAGE_TOKEN }}
