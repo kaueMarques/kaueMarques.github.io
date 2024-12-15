@@ -2,11 +2,11 @@ name: gera post
 
 on:
   issues:
-    types: [completed]
+    types: [closed]
 
 jobs:
   create-page:
-    if: ${{ github.event.issue.closed_reason == 'completed' && github.event.sender.login == github.repository_owner }}
+    if: github.event.issue.closed_reason == 'completed' && github.event.sender.login == github.repository_owner
     runs-on: ubuntu-latest
 
     steps:
@@ -16,8 +16,12 @@ jobs:
       - name: Extract issue content
         id: extract_issue
         run: |
+          mkdir -p _pages
+          # Obtendo a data atual no formato YYYY-MM-DD
           date=$(date -u +"%Y-%m-%d")
+          # Obtendo o título da issue
           title=${GITHUB_EVENT_NAME// /-} # Corrigir para obter o título como string
+          # Definindo o nome do arquivo
           filename="_pages/${date}-${title}.md"
           echo "title: '${{ github.event.issue.title }}'" > "$filename"
           echo "date: ${date}" >> "$filename"
@@ -27,6 +31,7 @@ jobs:
           echo "---" >> "$filename"
           echo "" >> "$filename"
           echo "${{ github.event.issue.body }}" >> "$filename"
+          # Substitui os links do YouTube por um iframe
           sed -i.bak 's/YT[^ ]*/{{< youtube \1 >}}/g' "$filename"
           echo "[clique aqui se o vídeo não abrir](https://www.youtube.com/watch?v=\1)" >> "$filename"
           rm "$filename.bak"
