@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Obrigado por preencher este formulário para criar um artigo de KT!
+        Kt maker
 
   - type: input
     id: link_video
