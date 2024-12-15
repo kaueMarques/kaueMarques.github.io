@@ -17,22 +17,24 @@ jobs:
         id: extract_issue
         run: |
           mkdir -p _pages
-          # Cria o nome do arquivo conforme o formato YYYY-MM-DD-TITULO.md
-          set date = $(date -u +"%Y-%m-%d")
-          set title = ${GITHUB_EVENT_NAME// /-}
-          echo "title: '${{ github.event.issue.title }}'" > "_pages/${date}-${{ title }}.md"
-          echo "date: ${date}" >> "_pages/${date}-${{ title }}.md"
-          echo "permalink: /posts/${date:0:4}/${date:5:2}/${title}/" >> "_pages/${date}-${{ title }}.md"
-          echo "tags:" >> "_pages/${date}-${{ title }}.md"
-          echo "  - nao-definido" >> "_pages/${date}-${{ title }}.md"
-          echo "" >> "_pages/${date}-${{ title }}.md"
-          echo "---" >> "_pages/${date}-${{ title }}.md"
-          echo "" >> "_pages/${date}-${{ title }}.md"
-          echo "${{ github.event.issue.body }}" >> "_pages/${date}-${{ title }}.md"
+          # Obtendo a data atual no formato YYYY-MM-DD
+          date=$(date -u +"%Y-%m-%d")
+          # Obtendo o título da issue
+          title=${GITHUB_EVENT_NAME// /-} # Corrigir para obter o título como string
+          # Definindo o nome do arquivo
+          filename="_pages/${date}-${title}.md"
+          echo "title: '${{ github.event.issue.title }}'" > "$filename"
+          echo "date: ${date}" >> "$filename"
+          echo "permalink: /posts/${date:0:4}/${date:5:2}/${title}/" >> "$filename"
+          echo "tags:" >> "$filename"
+          echo "  - nao-definido" >> "$filename"
+          echo "---" >> "$filename"
+          echo "" >> "$filename"
+          echo "${{ github.event.issue.body }}" >> "$filename"
           # Substitui os links do YouTube por um iframe
-          sed -i.bak 's/YT[^ ]*/{{< youtube \1 >}}/g' "_pages/${date}-${{ title }}.md"
-          echo "[clique aqui se o vídeo não abrir](https://www.youtube.com/watch?v=\1)" >> "_pages/${date}-${{ title }}.md"
-          rm "_pages/${date}-${{ title }}.md.bak"
+          sed -i.bak 's/YT[^ ]*/{{< youtube \1 >}}/g' "$filename"
+          echo "[clique aqui se o vídeo não abrir](https://www.youtube.com/watch?v=\1)" >> "$filename"
+          rm "$filename.bak"
 
       - name: Configure Git
         run: |
