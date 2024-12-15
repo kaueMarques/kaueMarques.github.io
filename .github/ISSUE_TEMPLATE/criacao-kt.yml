@@ -1,27 +1,23 @@
 name: Criacao de KT
-about: Adicionar template para criar automaticamente um artigo de KT
 title: "[KT]: "
 labels: ["kt-video"]
 body:
   - type: markdown
     attributes:
       value: |
-        criar um artigo de KT
+        Obrigado por preencher este formulário para criar um artigo de KT!
 
   - type: input
     id: link_video
     attributes:
       label: Link do Vídeo
-      description: link do vídeo
+      description: Forneça o link do vídeo relacionado ao artigo de KT
       placeholder: https://link_do_video.com
-      validations:
-        required: true
 
   - type: textarea
     id: bibliography
     attributes:
       label: Bibliografia
-      description: Adicione a bibliografia
-      placeholder: Adicione as referências
-      validations:
-        required: false
+      description: Adicione a bibliografia ou referências para o artigo de KT
+      placeholder: Adicione as referências aqui
+
