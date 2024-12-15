@@ -18,7 +18,6 @@ jobs:
       - name: Extract issue content
         id: extract_issue
         run: |
-          mkdir -p _pages
           date=$(date -u +"%Y-%m-%d")
           title=${{ github.event.issue.title }}
           sanitized_title=$(echo "${title}" | tr ' ' '-')
