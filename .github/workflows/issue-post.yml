@@ -38,7 +38,7 @@ jobs:
 
       - name: Commit and Push
         run: |
-          git add _pages/
+          git add _posts
           git commit -m "feat: post feito por action #${{ github.event.issue.number }}"
           git push
         env:
