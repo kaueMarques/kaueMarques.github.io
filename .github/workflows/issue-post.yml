@@ -7,7 +7,7 @@ on:
 jobs:
   create-page:
     if: 
-      - github.event.issue.closed_reason in ['done', 'closed', 'fixed', 'resolved', 'completed']
+      - github.event.issue.closed_reason in ['done', 'closed', 'fixed', 'resolved', 'completed'] &&
       - github.event.sender.login == github.repository_owner
     runs-on: ubuntu-latest
 
@@ -33,4 +33,20 @@ jobs:
           echo "---" >> "$filename"
           echo "" >> "$filename"
           echo "${{ github.event.issue.body }}" >> "$filename"
-          # Substit
+          # Substitui os links do YouTube por um iframe
+          sed -i.bak 's/YT[^ ]*/{{< youtube \1 >}}/g' "$filename"
+          echo "[clique aqui se o vídeo não abrir](https://www.youtube.com/watch?v=\1)" >> "$filename"
+          rm "$filename.bak"
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit and Push
+        run: |
+          git add _pages/
+          git commit -m "feat: post feito por action #${{ github.event.issue.number }}"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAGE_TOKEN }}
