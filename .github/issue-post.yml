@@ -30,8 +30,6 @@ jobs:
           echo "" >> "_pages/${date}-${{ title }}.md"
           echo "${{ github.event.issue.body }}" >> "_pages/${date}-${{ title }}.md"
           # Substitui os links do YouTube por um iframe
-          sed -i.bak 's/YT[^ ]*/{{< youtube \1 >}}/g' "_pages/${date}-${{ title }}.md"
-          echo "[clique aqui se o vídeo não abrir](https://www.youtube.com/watch?v=\1)" >> "_pages/${date}-${{ title }}.md"
           rm "_pages/${date}-${{ title }}.md.bak"
 
       - name: Configure Git
