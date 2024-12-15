@@ -1,4 +1,5 @@
 name: Criacao de KT
+description: Adicionar template para criar automaticamente um artigo de KT
 title: "[KT]: "
 labels: ["kt-video"]
 body:
@@ -20,4 +21,3 @@ body:
       label: Bibliografia
       description: Adicione a bibliografia ou referências para o artigo de KT
       placeholder: Adicione as referências aqui
-
