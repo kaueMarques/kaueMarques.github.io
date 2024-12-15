@@ -2,11 +2,11 @@ name: gera post
 
 on:
   issues:
-    types: [completed] 
+    types: [closed, done, fixed, resolved]
 
 jobs:
   create-page:
-    if: github.event.issue.closed_reason == 'completed' && github.event.sender.login == github.repository_owner
+    if: contains(['done', 'closed', 'fixed', 'resolved'], github.event.issue.closed_reason) && github.event.sender.login == github.repository_owner
     runs-on: ubuntu-latest
 
     steps:
