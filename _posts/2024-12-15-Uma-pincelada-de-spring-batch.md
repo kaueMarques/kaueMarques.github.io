@@ -1,3 +1,4 @@
+---
 title: 'Uma pincelada de spring batch'
 date: 2024-12-15
 permalink: /posts/2024/12/Uma-pincelada-de-spring-batch/
