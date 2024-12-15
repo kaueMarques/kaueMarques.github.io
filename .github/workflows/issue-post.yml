@@ -19,7 +19,7 @@ jobs:
         id: extract_issue
         run: |
           date=$(date -u +"%Y-%m-%d")
-          title=${{ github.event.issue.title }}
+          title="${{ github.event.issue.title }}"
           sanitized_title=$(echo "${title}" | tr ' ' '-')
           filename="_pages/${date}-${sanitized_title}.md"
           echo "title: '${{ github.event.issue.title }}'" > "$filename"
