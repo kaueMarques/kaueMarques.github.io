@@ -1,3 +1,4 @@
+---
 title: 'Lições do Metrô: Como a Organização Impulsiona a Alta Performance - Parte 1'
 date: 2024-12-18
 permalink: /posts/2024/12/Lições-do-Metrô:-Como-a-Organização-Impulsiona-a-Alta-Performance---Parte-1/
