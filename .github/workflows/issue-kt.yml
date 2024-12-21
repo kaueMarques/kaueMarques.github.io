@@ -2,7 +2,7 @@ name: gera kt
 
 on:
   issues:
-    types: [labeled, completed]
+    types: [labeled, completed, reopened] 
 
 jobs:
   create-page:
