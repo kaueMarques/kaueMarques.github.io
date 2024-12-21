@@ -2,7 +2,7 @@ name: gera kt
 
 on:
   issues:
-    types: [labeled, completed, reopened] 
+    types: [labeled, completed, reopened]
 
 jobs:
   create-page:
@@ -41,7 +41,7 @@ jobs:
           body="${{ github.event.issue.body }}"
           link_video=$(echo "$body" | grep -oP '(?<=https://www.youtube.com/watch\?v=|https://youtu.be/)[^ ]+')
           body=$(echo "$body" | sed -E "s|https://www.youtube.com/watch\\?v=${link_video}||g; s|https://youtu.be/${link_video}||g")
-          iframe='<iframe width="560" height="315" src="https://www.youtube.com/embed/${link_video}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>'
+          iframe="<iframe width='560' height='315' src='https://www.youtube.com/embed/${link_video}' frameborder='0' allow='autoplay; encrypted-media' allowfullscreen></iframe>"
           echo "::set-output name=filename::$filename"
           echo "::set-output name=iframe::$iframe"
           echo "::set-output name=body::$body"
@@ -75,5 +75,3 @@ jobs:
           git add .
           git commit -m "[KT]: ${{ github.event.issue.title }}"
           git push origin "kt-video-${{ github.event.issue.number }}"
-        env:
-          GITHUB_TOKEN: ${{ secrets.NEW_PAGE_TOKEN }}
