@@ -6,6 +6,8 @@ tags:
   - gh-action
 ---
 
+# [KT]: Um pouco de determinismo
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/jqc4ES4KuSQ?si=qcdZjPNoGGI8j2bS" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
 
 ### Link do Vídeo
