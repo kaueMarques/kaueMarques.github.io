@@ -15,7 +15,6 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Check for 'kt-video' label
-        id: check_label
         run: |
           issue_number=${{ github.event.issue.number }}
           repo_owner=${{ github.repository_owner }}
@@ -23,7 +22,6 @@ jobs:
           labels=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             "https://api.github.com/repos/${repo_owner}/${repo_name}/issues/${issue_number}/labels" | jq -r '.[].name')
           if [[ ! " ${labels[@]} " =~ " kt-video " ]]; then
-            echo "Label 'kt-video' not found, exiting."
             exit 1
           fi
 
@@ -39,27 +37,29 @@ jobs:
           filename="_posts/${date}-${sanitized_title}.md"
           body="${{ github.event.issue.body }}"
           link_video=$(echo "$body" | grep -oP '(?<=https://www.youtube.com/watch\?v=|https://youtu.be/)[^ ]+')
+          body=$(echo "$body" | sed -E "s|https://www.youtube.com/watch\\?v=${link_video}||g; s|https://youtu.be/${link_video}||g")
           iframe="<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/${link_video}\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>"
+          echo "::set-output name=filename::$filename"
+          echo "::set-output name=iframe::$iframe"
+          echo "::set-output name=body::$body"
 
-      - name: Check if file exists and delete
+      - name: Remove existing file if it exists
         run: |
-          if [ -f "_posts/${date}-${sanitized_title}.md" ]; then
-            rm "_posts/${date}-${sanitized_title}.md"
+          if [ -f "${{ steps.extract_issue.outputs.filename }}" ]; then
+            rm "${{ steps.extract_issue.outputs.filename }}"
           fi
 
       - name: Run header creation script
-        run: |
-          ./.github/workflows/file-creation-script/header.sh "_posts" "${{ github.event.issue.title }}" "${date}" "gh-action,kt-video"
+        run: ./.github/workflows/file-creation-script/header.sh "_posts" "${{ github.event.issue.title }}" "$(date -u +"%Y-%m-%d")" "gh-action,kt-video"
 
       - name: Append content to file
         run: |
-          filename="_posts/${date}-${sanitized_title}.md"
           {
             echo ""
-            echo "${iframe}"
+            echo "${{ steps.extract_issue.outputs.iframe }}"
             echo ""
-            echo "${body}"
-          } >> "$filename"
+            echo "${{ steps.extract_issue.outputs.body }}"
+          } >> "${{ steps.extract_issue.outputs.filename }}"
 
       - name: Configure Git
         run: |
@@ -69,7 +69,7 @@ jobs:
       - name: Commit and Push
         run: |
           git add _posts/
-          git commit -m "feat: post feito por action #${{ github.event.issue.number }} titulo ${{ github.event.issue.title }}"
+          git commit -m "feat: post feito por gh-action, issue #${{ github.event.issue.number }}, titulo ${{ github.event.issue.title }}"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.NEW_PAGE_TOKEN }}
