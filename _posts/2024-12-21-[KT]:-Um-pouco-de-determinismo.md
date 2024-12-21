@@ -1,3 +1,4 @@
+---
 title: '[KT]: Um pouco de determinismo'
 date: 2024-12-21
 permalink: /posts/2024/12/[KT]:-Um-pouco-de-determinismo/
