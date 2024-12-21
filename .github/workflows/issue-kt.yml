@@ -40,23 +40,26 @@ jobs:
           body="${{ github.event.issue.body }}"
           link_video=$(echo "$body" | grep -oP '(?<=https://www.youtube.com/watch\?v=|https://youtu.be/)[^ ]+')
           iframe="<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/${link_video}\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>"
-          if [ -f "$filename" ]; then
-            rm "$filename"
+
+      - name: Check if file exists and delete
+        run: |
+          if [ -f "_posts/${date}-${sanitized_title}.md" ]; then
+            rm "_posts/${date}-${sanitized_title}.md"
           fi
+
+      - name: Run header creation script
+        run: |
+          ./.github/workflows/file-creation-script/header.sh "_posts" "${{ github.event.issue.title }}" "${date}" "gh-action,kt-video"
+
+      - name: Append content to file
+        run: |
+          filename="_posts/${date}-${sanitized_title}.md"
           {
-            echo "---"
-            echo "title: '${{ github.event.issue.title }}'"
-            echo "date: ${date}"
-            echo "permalink: /posts/${date:0:4}/${date:5:2}/${sanitized_title}/"
-            echo "tags:"
-            echo "  - gh-action"
-            echo "  - kt-video"
-            echo "---"
             echo ""
             echo "${iframe}"
             echo ""
             echo "${body}"
-          } > "$filename"
+          } >> "$filename"
 
       - name: Configure Git
         run: |
