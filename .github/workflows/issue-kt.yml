@@ -2,7 +2,7 @@ name: gera kt
 
 on:
   issues:
-    types: [done, fixed, resolved, completed]
+    types: [done, completed]
 
 jobs:
   create-page:
@@ -38,18 +38,19 @@ jobs:
           if [ -f "$filename" ]; then
             rm "$filename"
           fi
-          echo "---" >> "$filename"
-          echo "" >> "$filename"
-          echo "title: '${{ github.event.issue.title }}'" > "$filename"
-          echo "date: ${date}" >> "$filename"
-          echo "permalink: /posts/${date:0:4}/${date:5:2}/${sanitized_title}/" >> "$filename"
-          echo "tags:" >> "$filename"
-          echo "  - gh-action" >> "$filename"
-          echo "---" >> "$filename"
-          echo "" >> "$filename"
-          echo "${iframe}" >> "$filename"
-          echo "" >> "$filename"
-          echo "${body}" >> "$filename"
+          {
+            echo "---"
+            echo "title: '${{ github.event.issue.title }}'"
+            echo "date: ${date}"
+            echo "permalink: /posts/${date:0:4}/${date:5:2}/${sanitized_title}/"
+            echo "tags:"
+            echo "  - gh-action"
+            echo "---"
+            echo ""
+            echo "${iframe}"
+            echo ""
+            echo "${body}"
+          } > "$filename"
 
       - name: Configure Git
         run: |
