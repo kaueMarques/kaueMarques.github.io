@@ -6,6 +6,7 @@ on:
 
 jobs:
   create-page:
+    if: github.event.issue.user.login == github.repository_owner
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -14,11 +15,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Check for 'kt-video' label
+      - name: Check for 'post-creation' label
         id: check_label
         run: |
-          if [[ "$(jq -r '.issue.labels[] | select(.name == "kt-video")' <<< "${{ toJson(github.event) }}")" == "" ]]; then
-            echo "Label 'kt-video' not found, exiting."
+          if [[ "$(jq -r '.issue.labels[] | select(.name == "post-creation")' <<< "${{ toJson(github.event) }}")" == "" ]]; then
+            echo "Label 'post-creation' not found, exiting."
             exit 0
           fi
 
@@ -32,10 +33,6 @@ jobs:
           title="${{ github.event.issue.title }}"
           sanitized_title=$(echo "${title}" | tr ' ' '-')
           filename="_posts/${date}-${sanitized_title}.md"
-          body="${{ github.event.issue.body }}"
-          link_video=$(echo "$body" | grep -oP '(?<=https://www.youtube.com/watch\?v=|https://youtu.be/)[^ ]+')
-          iframe="<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/${link_video}\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>"
-          echo "---" >> "$filename"
           echo "title: '${{ github.event.issue.title }}'" > "$filename"
           echo "date: ${date}" >> "$filename"
           echo "permalink: /posts/${date:0:4}/${date:5:2}/${sanitized_title}/" >> "$filename"
@@ -43,9 +40,7 @@ jobs:
           echo "  - gh-action" >> "$filename"
           echo "---" >> "$filename"
           echo "" >> "$filename"
-          echo "${iframe}" >> "$filename"
-          echo "" >> "$filename"
-          echo "${body}" >> "$filename"
+          echo "${{ github.event.issue.body }}" >> "$filename"
 
       - name: Configure Git
         run: |
