@@ -2,7 +2,7 @@ name: gera kt
 
 on:
   issues:
-    types: [done, fixed, resolved, completed]
+    types: [labeled, completed]
 
 jobs:
   create-page:
@@ -17,7 +17,12 @@ jobs:
       - name: Check for 'kt-video' label
         id: check_label
         run: |
-          if [[ "$(jq -r '.issue.labels[] | select(.name == "kt-video")' <<< "${{ toJson(github.event) }}")" == "" ]]; then
+          issue_number=${{ github.event.issue.number }}
+          repo_owner=${{ github.repository_owner }}
+          repo_name=${{ github.event.repository.name }}
+          labels=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${repo_owner}/${repo_name}/issues/${issue_number}/labels" | jq -r '.[].name')
+          if [[ ! " ${labels[@]} " =~ " kt-video " ]]; then
             echo "Label 'kt-video' not found, exiting."
             exit 1
           fi
@@ -39,7 +44,6 @@ jobs:
             rm "$filename"
           fi
           {
-            echo ""
             echo "---"
             echo "title: '${{ github.event.issue.title }}'"
             echo "date: ${date}"
