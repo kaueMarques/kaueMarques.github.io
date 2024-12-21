@@ -14,6 +14,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Add execution permissions to scripts in file-creation-script
+        run: find ./.github/workflows/file-creation-script -type f -name "*.sh" -exec chmod +x {} \;
+
       - name: Check for 'kt-video' label
         run: |
           issue_number=${{ github.event.issue.number }}
@@ -48,9 +51,6 @@ jobs:
           if [ -f "${{ steps.extract_issue.outputs.filename }}" ]; then
             rm "${{ steps.extract_issue.outputs.filename }}"
           fi
-
-      - name: Add execution permissions to header script
-        run: chmod +x ./.github/workflows/file-creation-script/header.sh
 
       - name: Run header creation script
         run: ./.github/workflows/file-creation-script/header.sh "_posts" "${{ github.event.issue.title }}" "$(date -u +"%Y-%m-%d")" "gh-action,kt-video"
