@@ -27,6 +27,7 @@ jobs:
           if [[ ! " ${labels[@]} " =~ " kt-video " ]]; then
             exit 1
           fi
+
       - name: Create _posts directory
         run: mkdir -p _posts
 
@@ -44,11 +45,13 @@ jobs:
           echo "::set-output name=filename::$filename"
           echo "::set-output name=iframe::$iframe"
           echo "::set-output name=body::$body"
+
       - name: Remove existing file if it exists
         run: |
           if [ -f "${{ steps.extract_issue.outputs.filename }}" ]; then
             rm "${{ steps.extract_issue.outputs.filename }}"
           fi
+
       - name: Run header creation script
         run: ./.github/workflows/file-creation-script/header.sh "_posts" "${{ github.event.issue.title }}" "$(date -u +"%Y-%m-%d")" "gh-action,kt-video"
 
@@ -56,15 +59,21 @@ jobs:
         run: |
           {
             echo ""
-            echo "${{ steps.extract_issue.outputs.iframe }}" | sed 's/"/\\"/g'
+            echo "${{ steps.extract_issue.outputs.iframe }}"
             echo ""
             echo "${{ steps.extract_issue.outputs.body }}"
           } >> "${{ steps.extract_issue.outputs.filename }}"
+
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Commit and Push
-        run: ./.github/workflows/commit-and-push.sh "${{ github.event.issue.number }}" "${{ github.event.issue.title }}"
+        run: |
+          git checkout -b "kt-video-${{ github.event.issue.number }}"
+          git add .
+          git commit -m "[KT]: ${{ github.event.issue.title }}"
+          git push origin "kt-video-${{ github.event.issue.number }}"
         env:
           GITHUB_TOKEN: ${{ secrets.NEW_PAGE_TOKEN }}
