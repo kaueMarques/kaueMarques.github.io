@@ -20,7 +20,7 @@ jobs:
         run: |
           if [[ "$(jq -r '.issue.labels[] | select(.name == "post-creation")' <<< "${{ toJson(github.event) }}")" == "" ]]; then
             echo "Label 'post-creation' not found, exiting."
-            exit 0
+            exit 1
           fi
 
       - name: Create _posts directory
@@ -40,6 +40,7 @@ jobs:
           echo "permalink: /posts/${date:0:4}/${date:5:2}/${sanitized_title}/" >> "$filename"
           echo "tags:" >> "$filename"
           echo "  - gh-action" >> "$filename"
+          echo "  - kt-article" >> "$filename"
           echo "---" >> "$filename"
           echo "" >> "$filename"
           echo "${{ github.event.issue.body }}" >> "$filename"
