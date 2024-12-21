@@ -41,7 +41,7 @@ jobs:
           body="${{ github.event.issue.body }}"
           link_video=$(echo "$body" | grep -oP '(?<=https://www.youtube.com/watch\?v=|https://youtu.be/)[^ ]+')
           body=$(echo "$body" | sed -E "s|https://www.youtube.com/watch\\?v=${link_video}||g; s|https://youtu.be/${link_video}||g")
-          iframe="<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/${link_video}\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>"
+          iframe="<iframe width=\"560\" height=\"315\" src='https://www.youtube.com/embed/${link_video}' frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>"
           echo "::set-output name=filename::$filename"
           echo "::set-output name=iframe::$iframe"
           echo "::set-output name=body::$body"
