@@ -1,4 +1,4 @@
-name: gera post
+name: gera kt
 
 on:
   issues:
@@ -6,7 +6,6 @@ on:
 
 jobs:
   create-page:
-    if: github.event.issue.user.login == github.repository_owner && contains(github.event.issue.labels.*.name, 'kt-video')
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -14,6 +13,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Check for 'kt-video' label
+        id: check_label
+        run: |
+          if [[ "$(jq -r '.issue.labels[] | select(.name == "kt-video")' <<< "${{ toJson(github.event) }}")" == "" ]]; then
+            echo "Label 'kt-video' not found, exiting."
+            exit 0
+          fi
 
       - name: Create _posts directory
         run: mkdir -p _posts
