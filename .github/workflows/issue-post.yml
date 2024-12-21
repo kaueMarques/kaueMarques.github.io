@@ -2,7 +2,7 @@ name: gera post
 
 on:
   issues:
-    types: [closed, done, fixed, resolved, completed]
+    types: [labeled, completed]
 
 jobs:
   create-page:
@@ -33,6 +33,8 @@ jobs:
           title="${{ github.event.issue.title }}"
           sanitized_title=$(echo "${title}" | tr ' ' '-')
           filename="_posts/${date}-${sanitized_title}.md"
+          echo "---" >> "$filename"
+          echo "" >> "$filename"
           echo "title: '${{ github.event.issue.title }}'" > "$filename"
           echo "date: ${date}" >> "$filename"
           echo "permalink: /posts/${date:0:4}/${date:5:2}/${sanitized_title}/" >> "$filename"
