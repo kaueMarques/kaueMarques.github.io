@@ -2,7 +2,7 @@ name: gera kt
 
 on:
   issues:
-    types: [closed, done, fixed, resolved, completed]
+    types: [done, fixed, resolved, completed]
 
 jobs:
   create-page:
@@ -35,6 +35,9 @@ jobs:
           body="${{ github.event.issue.body }}"
           link_video=$(echo "$body" | grep -oP '(?<=https://www.youtube.com/watch\?v=|https://youtu.be/)[^ ]+')
           iframe="<iframe width=\"560\" height=\"315\" src=\"https://www.youtube.com/embed/${link_video}\" frameborder=\"0\" allow=\"autoplay; encrypted-media\" allowfullscreen></iframe>"
+          if [ -f "$filename" ]; then
+            rm "$filename"
+          fi
           echo "---" >> "$filename"
           echo "" >> "$filename"
           echo "title: '${{ github.event.issue.title }}'" > "$filename"
