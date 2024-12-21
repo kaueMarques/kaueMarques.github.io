@@ -2,7 +2,7 @@ name: gera kt
 
 on:
   issues:
-    types: [done, completed]
+    types: [done, fixed, resolved, completed]
 
 jobs:
   create-page:
@@ -19,7 +19,7 @@ jobs:
         run: |
           if [[ "$(jq -r '.issue.labels[] | select(.name == "kt-video")' <<< "${{ toJson(github.event) }}")" == "" ]]; then
             echo "Label 'kt-video' not found, exiting."
-            exit 0
+            exit 1
           fi
 
       - name: Create _posts directory
@@ -30,7 +30,7 @@ jobs:
         run: |
           date=$(date -u +"%Y-%m-%d")
           title="${{ github.event.issue.title }}"
-          sanitized_title=$(echo "${title}" | tr ' ' '-')
+          sanitized_title=$(echo "${title}" | tr -cd '[:alnum:]-' | tr ' ' '-')
           filename="_posts/${date}-${sanitized_title}.md"
           body="${{ github.event.issue.body }}"
           link_video=$(echo "$body" | grep -oP '(?<=https://www.youtube.com/watch\?v=|https://youtu.be/)[^ ]+')
@@ -39,12 +39,14 @@ jobs:
             rm "$filename"
           fi
           {
+            echo ""
             echo "---"
             echo "title: '${{ github.event.issue.title }}'"
             echo "date: ${date}"
             echo "permalink: /posts/${date:0:4}/${date:5:2}/${sanitized_title}/"
             echo "tags:"
             echo "  - gh-action"
+            echo "  - kt-video"
             echo "---"
             echo ""
             echo "${iframe}"
