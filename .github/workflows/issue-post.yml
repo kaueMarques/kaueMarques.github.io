@@ -18,7 +18,12 @@ jobs:
       - name: Check for 'post-creation' label
         id: check_label
         run: |
-          if [[ "$(jq -r '.issue.labels[] | select(.name == "post-creation")' <<< "${{ toJson(github.event) }}")" == "" ]]; then
+          issue_number=${{ github.event.issue.number }}
+          repo_owner=${{ github.repository_owner }}
+          repo_name=${{ github.event.repository.name }}
+          labels=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            "https://api.github.com/repos/${repo_owner}/${repo_name}/issues/${issue_number}/labels" | jq -r '.[].name')
+          if [[ ! " ${labels[@]} " =~ " post-creation " ]]; then
             echo "Label 'post-creation' not found, exiting."
             exit 1
           fi
