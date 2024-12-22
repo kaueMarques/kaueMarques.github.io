@@ -1,4 +1,4 @@
-name: gera post
+name: ARTICLE CREATING - GH ACTION
 
 on:
   issues:
@@ -41,6 +41,10 @@ jobs:
           filename="_posts/${date}-${sanitized_title}.md"
           if [ -f "$filename" ]; then
             rm "$filename"
+            curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -X POST \
+              -d '{"labels":["edited"]}' \
+              "https://api.github.com/repos/${repo_owner}/${repo_name}/issues/${issue_number}/labels"
           fi
           echo "---" >> "$filename"
           echo "title: '${{ github.event.issue.title }}'" >> "$filename"
