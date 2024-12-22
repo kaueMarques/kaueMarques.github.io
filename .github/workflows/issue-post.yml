@@ -32,6 +32,7 @@ jobs:
             curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
               -X DELETE \
               "https://api.github.com/repos/${repo_owner}/${repo_name}/issues/${issue_number}"
+            echo "::set-output name=file_deleted::true"
             exit 0
           elif [[ ! " ${labels[@]} " =~ " post-creation " && ! " ${labels[@]} " =~ " edited " && ! " ${labels[@]} " =~ " posted " ]]; then
             echo "Relevant labels not found, skipping action."
@@ -39,9 +40,11 @@ jobs:
           fi
 
       - name: Create _posts directory
+        if: steps.check_labels.outputs.file_deleted != 'true'
         run: mkdir -p _posts
 
       - name: Extract issue content
+        if: steps.check_labels.outputs.file_deleted != 'true'
         id: extract_issue
         run: |
           date=$(date -u +"%Y-%m-%d")
@@ -69,11 +72,13 @@ jobs:
           } >> "$filename"
 
       - name: Configure Git
+        if: steps.check_labels.outputs.file_deleted != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - name: Commit and Push
+        if: steps.check_labels.outputs.file_deleted != 'true'
         run: |
           git add _posts/
           git commit -m "feat: post feito por action #${{ github.event.issue.number }} titulo ${{ github.event.issue.title }}"
@@ -82,6 +87,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.NEW_PAGE_TOKEN }}
 
       - name: Add 'posted' label
+        if: steps.check_labels.outputs.file_deleted != 'true'
         run: |
           issue_number=${{ github.event.issue.number }}
           repo_owner=${{ github.repository_owner }}
