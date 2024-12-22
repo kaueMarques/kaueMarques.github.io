@@ -25,8 +25,7 @@ jobs:
           labels=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             "https://api.github.com/repos/${repo_owner}/${repo_name}/issues/${issue_number}/labels" | jq -r '.[].name')
           if [[ " ${labels[@]} " =~ " delete " ]]; then
-            sanitized_title=$(echo "${{ github.event.issue.title }}" | tr ' ' '-')
-            filename="_posts/${issue_number}-${sanitized_title}.md"
+            filename=$(find _posts -name "*-${issue_number}.md")
             if [ -f "$filename" ]; then
               rm "$filename"
             fi
@@ -48,7 +47,7 @@ jobs:
           date=$(date -u +"%Y-%m-%d")
           title="${{ github.event.issue.title }}"
           sanitized_title=$(echo "${title}" | tr ' ' '-')
-          filename="_posts/${issue_number}-${sanitized_title}.md"
+          filename="_posts/${date}-${sanitized_title}-#${issue_number}.md"
           if [ -f "$filename" ]; then
             rm "$filename"
             curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
@@ -60,7 +59,7 @@ jobs:
             echo "---"
             echo "title: '${title}'"
             echo "date: ${date}"
-            echo "permalink: /posts/${date:0:4}/${date:5:2}/${issue_number}-${sanitized_title}/"
+            echo "permalink: /posts/${date:0:4}/${date:5:2}/${sanitized_title}/"
             echo "tags:"
             echo "  - gh-action"
             echo "  - kt-article"
