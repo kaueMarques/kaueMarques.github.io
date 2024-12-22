@@ -25,7 +25,7 @@ jobs:
           labels=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             "https://api.github.com/repos/${repo_owner}/${repo_name}/issues/${issue_number}/labels" | jq -r '.[].name')
           if [[ " ${labels[@]} " =~ " delete " ]]; then
-            filename=$(find _posts -name "*-${issue_number}.md")
+            filename=$(find _posts -name "*-#${issue_number}.md")
             if [ -f "$filename" ]; then
               rm "$filename"
             fi
@@ -59,55 +59,4 @@ jobs:
             echo "---"
             echo "title: '${title}'"
             echo "date: ${date}"
-            echo "permalink: /posts/${date:0:4}/${date:5:2}/${sanitized_title}/"
-            echo "tags:"
-            echo "  - gh-action"
-            echo "  - kt-article"
-            echo "---"
-            echo ""
-            echo "${{ github.event.issue.body }}"
-          } >> "$filename"
-
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Commit and Push
-        run: |
-          git add _posts/
-          git commit -m "feat: post feito por action #${{ github.event.issue.number }} titulo ${{ github.event.issue.title }}"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.NEW_PAGE_TOKEN }}
-
-      - name: Wait for GitHub Pages deployment
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const check_run_name = 'pages build and deployment';
-            const { data: { check_runs } } = await github.checks.listForRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: context.sha,
-              status: 'in_progress'
-            });
-            const check_run = check_runs.find(run => run.name === check_run_name);
-            if (check_run) {
-              await github.checks.waitForCheckRun({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                check_run_id: check_run.id,
-                status: 'completed'
-              });
-            }
-
-      - name: Add 'posted' label
-        run: |
-          issue_number=${{ github.event.issue.number }}
-          repo_owner=${{ github.repository_owner }}
-          repo_name=${{ github.event.repository.name }}
-          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -X POST \
-            -d '{"labels":["posted"]}' \
-            "https://api.github.com/repos/${repo_owner}/${repo_name}/issues/${issue_number}/labels"
+            echo
