@@ -81,6 +81,27 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.NEW_PAGE_TOKEN }}
 
+      - name: Wait for GitHub Pages deployment
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const check_run_name = 'pages build and deployment';
+            const { data: { check_runs } } = await github.checks.listForRef({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              ref: context.sha,
+              status: 'in_progress'
+            });
+            const check_run = check_runs.find(run => run.name === check_run_name);
+            if (check_run) {
+              await github.checks.waitForCheckRun({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                check_run_id: check_run.id,
+                status: 'completed'
+              });
+            }
+
       - name: Add 'posted' label
         run: |
           issue_number=${{ github.event.issue.number }}
