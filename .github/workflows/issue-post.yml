@@ -60,7 +60,7 @@ jobs:
             echo "---"
             echo "title: '${title}'"
             echo "date: ${date}"
-            echo "permalink: /posts/${date:0:4}/${date:5:2}/${sanitized_title}/"
+            echo "permalink: /posts/${date:0:4}/${date:5:2}/${issue_number}-${sanitized_title}/"
             echo "tags:"
             echo "  - gh-action"
             echo "  - kt-article"
