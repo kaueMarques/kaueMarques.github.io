@@ -71,10 +71,9 @@ jobs:
 
       - name: Commit and Push
         run: |
-          git checkout -b "kt-video-${{ github.event.issue.number }}"
           git add .
           git commit -m "[KT]: ${{ github.event.issue.title }}"
-          git push origin "kt-video-${{ github.event.issue.number }}"
+          git push origin master
 
       - name: Add 'posted' label
         run: |
