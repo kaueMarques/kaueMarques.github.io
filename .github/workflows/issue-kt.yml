@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      issues: write
 
     steps:
       - name: Checkout repository
@@ -41,7 +42,7 @@ jobs:
           body="${{ github.event.issue.body }}"
           link_video=$(echo "$body" | grep -oP '(?<=https://www.youtube.com/watch\?v=|https://youtu.be/)[^ ]+')
           body=$(echo "$body" | sed -E "s|https://www.youtube.com/watch\\?v=${link_video}||g; s|https://youtu.be/${link_video}||g")
-          iframe="<iframe width='560' height='315' src='https://www.youtube.com/embed/${link_video}' frameborder='0' allow='autoplay; encrypted-media' allowfullscreen></iframe>"
+          iframe="<iframe width='560' height='315' src='https://www.youtube.com/embed/${link_video}' frameborder='0' allowfullscreen></iframe>"
           echo "::set-output name=filename::$filename"
           echo "::set-output name=iframe::$iframe"
           echo "::set-output name=body::$body"
@@ -52,16 +53,24 @@ jobs:
             rm "${{ steps.extract_issue.outputs.filename }}"
           fi
 
-      - name: Run header creation script
-        run: ./.github/workflows/file-creation-script/header.sh "_posts" "${{ github.event.issue.title }}" "$(date -u +"%Y-%m-%d")" "gh-action,kt-video"
-
       - name: Append content to file
         run: |
           {
+            echo "---"
+            echo "title: '${{ github.event.issue.title }}'"
+            echo "date: $(date -u +"%Y-%m-%d")"
+            echo "permalink: /posts/$(date -u +"%Y/%m/%d")/${sanitized_title}/"
+            echo "tags:"
+            echo "  - gh-action"
+            echo "---"
             echo ""
-            echo "${{ steps.extract_issue.outputs.iframe }}"
+            echo "### ${{ github.event.issue.title }}"
             echo ""
             echo "${{ steps.extract_issue.outputs.body }}"
+            echo ""
+            echo "[https://youtu.be/${link_video}](https://youtu.be/${link_video})"
+            echo ""
+            echo "${{ steps.extract_issue.outputs.iframe }}"
           } >> "${{ steps.extract_issue.outputs.filename }}"
 
       - name: Configure Git
